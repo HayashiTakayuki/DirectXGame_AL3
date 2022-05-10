@@ -36,13 +36,17 @@ void GameScene::Update()
 
 void GameScene::Draw() {
 
+	//デバッグのグリッド線
 	for (int i = -10; i <= 10; i++)
 	{
-		PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0.0f + (i * 5), 0.0f , -50.0f), Vector3(0.0f + (i * 5), 0.0f, 50.0f), Vector4(255, 255, 255, 255));
-		PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(-50.0f, 0.0f, 0.0f + (i * 5)), Vector3(50.0f, 0.0f, 0.0f + (i * 5)), Vector4(255, 255, 255, 255));
+		//X軸
+		PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(-10.0f, 0.0f, 0.0f + i), Vector3(10.0f, 0.0f, 0.0f + i), Vector4(0, 0, 255, 255));
+		//Y軸
+		//PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(-10.0f, 0.0f+ i, 0.0f ), Vector3(10.0f, 0.0f + i, 0.0f), Vector4(0, 255, 0, 255));
+		//Z軸
+		PrimitiveDrawer::GetInstance()->DrawLine3d(Vector3(0.0f + i, 0.0f, -10.0f), Vector3(0.0f + i, 0.0f, 10.0f), Vector4(255, 0, 0, 255));
+
 	}
-
-
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
