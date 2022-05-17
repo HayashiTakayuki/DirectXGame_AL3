@@ -57,5 +57,6 @@ class GameScene {
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	DebugCamera* debugCamera_ = nullptr;
+	float PAI = 3.14159265358979323f;
 
 };
