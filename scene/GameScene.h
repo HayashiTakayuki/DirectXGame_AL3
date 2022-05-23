@@ -54,9 +54,13 @@ class GameScene {
 
 	uint32_t textureHandle_ = 0;
 	Model* model_ = nullptr;
-	WorldTransform worldTransform_;
+	static const int num = 100;
+	WorldTransform worldTransforms_[num];
 	ViewProjection viewProjection_;
 	DebugCamera* debugCamera_ = nullptr;
 	float PAI = 3.14159265358979323f;
+
+	//カメラ上方向の角度
+	float viewAngle = 0.0f;
 
 };
