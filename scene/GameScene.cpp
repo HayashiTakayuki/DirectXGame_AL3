@@ -133,6 +133,30 @@ Matrix4 matrix(WorldTransform worldTransform_)
 	return worldTransform_.matWorld_;
 }
 
+void MatrixParent(WorldTransform worldTransforms[])
+{
+	for (int i = 0; i < 9; i++)
+	{
+		//ワールド行列の計算
+		worldTransforms[i].matWorld_ = matrix(worldTransforms[i]);
+	}
+
+	worldTransforms[1].matWorld_ *= worldTransforms[0].matWorld_;
+	worldTransforms[2].matWorld_ *= worldTransforms[1].matWorld_;
+	worldTransforms[6].matWorld_ *= worldTransforms[1].matWorld_;
+	worldTransforms[3].matWorld_ *= worldTransforms[2].matWorld_;
+	worldTransforms[4].matWorld_ *= worldTransforms[2].matWorld_;
+	worldTransforms[5].matWorld_ *= worldTransforms[2].matWorld_;
+	worldTransforms[7].matWorld_ *= worldTransforms[6].matWorld_;
+	worldTransforms[8].matWorld_ *= worldTransforms[6].matWorld_;
+
+	for (int i = 0; i < 9; i++)
+	{
+		//行列の転送
+		worldTransforms[i].TransferMatrix();
+	}
+}
+
 GameScene::~GameScene() 
 {
 	delete model_; 
@@ -228,32 +252,40 @@ void GameScene::Update()
 			worldTransforms_[0].translation_.z += move.z);
 	}
 
-	//for (int i = 0; i < 9; i++)
-	//{
-	//	//ワールド行列の計算
-	//	worldTransforms_[i].matWorld_ = matrix(worldTransforms_[i]);
+	//行列の計算し転送
+	MatrixParent(worldTransforms_);
 
-	//}
+	//上半身の回転処理
+	{
+		//上半身の回転の速さ[ラジアン/flame]
+		const float kChectSpeed = 0.05f;
 
-	//worldTransforms_[1].matWorld_ *= worldTransforms_[0].matWorld_;
-	//
+		//押した方向で移動ベクトルを変更
+		if (input_->PushKey(DIK_U))
+		{
+			worldTransforms_[PartId::Chest].rotation_.y -= kChectSpeed;
+		}
+		else if (input_->PushKey(DIK_I))
+		{
+			worldTransforms_[PartId::Chest].rotation_.y += kChectSpeed;
+		}
+	}
 
-	//for (int i = 3; i < ; i++)
-	//{
-	//	//合成
-	//	worldTransforms_[i].matWorld_ *= worldTransforms_[i - 1].matWorld_;
-	//}
+	//下半身の回転処理
+	{
+		//下半身の回転の速さ[ラジアン/flame]
+		const float kHipSpeed = 0.05f;
 
-
-	//for (int i = 0; i < 9; i++)
-	//{
-	//	//行列の転送
-	//	worldTransforms_[i].TransferMatrix();
-	//}
-
-
-
-
+		//押した方向で移動ベクトルを変更
+		if (input_->PushKey(DIK_J))
+		{
+			worldTransforms_[PartId::Hip].rotation_.y -= kHipSpeed;
+		}
+		else if (input_->PushKey(DIK_K))
+		{
+			worldTransforms_[PartId::Hip].rotation_.y += kHipSpeed;
+		}
+	}
 
 }
 
@@ -294,7 +326,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	for (int i = 0; i < 9; i++)
+	for (int i = 2; i < 9; i++)
 	{
 		model_->Draw(worldTransforms_[i], viewProjection_, textureHandle_);
 	}
