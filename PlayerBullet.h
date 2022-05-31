@@ -5,39 +5,31 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "Matrix.h"
-#include"PlayerBullet.h"
 
 /// <summary>
-/// 自キャラ
+/// 自キャラの弾
 /// </summary>
-class Player 
+class PlayerBullet
 {
 public:
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player();
-
+		~PlayerBullet();
 	/// <summary>
+
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle);
+	/// <param name="model">モデル</param>
+	/// <param name="position">初期座標</param>
+	void Initialize(Model* model, const Vector3& position);
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void Update();
+	void Upadate();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw(ViewProjection viewProjection_);
-
-	/// <summary>
-	/// 攻撃
-	/// </summary>
-	void Attack();
+	void Draw(const ViewProjection& viewProjection);
 
 private:
 	//ワールド変換データ
@@ -46,14 +38,8 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	
-	Input* input_ = nullptr;	
+
+	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	
-	//プレイヤーの行列計算
 	Matrix* matrix_ = nullptr;
-
-	//弾
-	PlayerBullet* bullet_ = nullptr;
-
 };

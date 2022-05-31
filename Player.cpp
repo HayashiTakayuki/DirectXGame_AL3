@@ -1,57 +1,17 @@
 #include "Player.h"
 
-//平行移動行列を設定
-Matrix4 matTrans(WorldTransform worldTransform_)
+Player::~Player()
 {
-	Matrix4 matTrans;
-	matTrans.m[0][0] = 1;
-	matTrans.m[1][1] = 1;
-	matTrans.m[2][2] = 1;
-	matTrans.m[3][3] = 1;
-	matTrans.m[3][0] = worldTransform_.translation_.x;
-	matTrans.m[3][1] = worldTransform_.translation_.y;
-	matTrans.m[3][2] = worldTransform_.translation_.z;
-	return matTrans;
-}
-
-//単位行列を設定
-Matrix4 tani()
-{
-	Matrix4 tani = {};
-	tani.m[0][0] = 1;
-	tani.m[1][1] = 1;
-	tani.m[2][2] = 1;
-	tani.m[3][3] = 1;
-	return tani;
-}
-
-//行列の設定
-Matrix4 matrix(WorldTransform worldTransform_)
-{
-	//ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-
-	//単位行列を設定
-	tani();
-
-	//平行移動行列を設定
-	matTrans(worldTransform_);
-
-	//単位行列を代入する
-	worldTransform_.matWorld_ = tani();
-
-	//掛け算して代入
-
-	//行列の合成
-	worldTransform_.matWorld_ *= matTrans(worldTransform_);
-
-	return worldTransform_.matWorld_;
+	delete matrix_;
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle)
 {
 	//NULLポインタチェック
 	assert(model);
+
+	//自キャラの生成
+	matrix_ = new Matrix();
 
 	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
@@ -87,11 +47,27 @@ void Player::Update()
 		move.y = -kCharacterSpeed;
 	}
 
+	//回転処理
+	{
+		//回転の速さ[ラジアン/flame]
+		const float kChectSpeed = 0.05f;
+
+		//押した方向で移動ベクトルを変更
+		if (input_->PushKey(DIK_U))
+		{
+			worldTransform_.rotation_.y -= kChectSpeed;
+		}
+		if (input_->PushKey(DIK_I))
+		{
+			worldTransform_.rotation_.y += kChectSpeed;
+		}
+	}
+
 	//注視点移動（ベクトルの加算）
 	worldTransform_.translation_ += move;
 
 	//ワールド行列の計算
-	worldTransform_.matWorld_ = matrix(worldTransform_);
+	worldTransform_.matWorld_ = matrix_->matrix(worldTransform_);
 
 	//移動限界座標
 	const float kMoveLimitX = 33;
@@ -112,10 +88,36 @@ void Player::Update()
 		worldTransform_.translation_.y += move.y,
 		worldTransform_.translation_.z += move.z);
 
+	//キャラクターの攻撃処理
+	Attack();
+	//弾の更新処理
+	if (bullet_) 
+	{
+		bullet_->Upadate();
+	}
 }
 
 void Player::Draw(ViewProjection viewProjection_)
 {
 	//自キャラの描画
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+
+	//弾の描画
+	if (bullet_)
+	{
+		bullet_->Draw(viewProjection_);
+	}
+}
+
+void Player::Attack()
+{
+	if (input_->PushKey(DIK_SPACE))
+	{
+		PlayerBullet* newBullet = new PlayerBullet();
+		
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		//弾を登録する
+		bullet_ = newBullet;
+	}
 }
