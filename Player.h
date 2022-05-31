@@ -6,6 +6,8 @@
 #include "DebugText.h"
 #include "Matrix.h"
 #include"PlayerBullet.h"
+#include<memory>
+#include<list>
 
 /// <summary>
 /// Ž©ƒLƒƒƒ‰
@@ -54,6 +56,6 @@ private:
 	Matrix* matrix_ = nullptr;
 
 	//’e
-	PlayerBullet* bullet_ = nullptr;
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 };
