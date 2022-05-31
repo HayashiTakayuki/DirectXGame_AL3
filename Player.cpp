@@ -75,14 +75,32 @@ void Player::Update()
 
 	//押した方向で移動ベクトルを変更
 	if (input_->PushKey(DIK_LEFT)) {
-		move = { -kCharacterSpeed, 0, 0 };
+		move.x = -kCharacterSpeed;
 	}
-	else if (input_->PushKey(DIK_RIGHT)) {
-		move = { kCharacterSpeed, 0, 0 };
+	if (input_->PushKey(DIK_RIGHT)) {
+		move.x = kCharacterSpeed;
+	}
+	if (input_->PushKey(DIK_UP)) {
+		move.y = kCharacterSpeed;
+	}
+	if (input_->PushKey(DIK_DOWN)) {
+		move.y = -kCharacterSpeed;
 	}
 
 	//注視点移動（ベクトルの加算）
 	worldTransform_.translation_ += move;
+
+	//ワールド行列の計算
+	worldTransform_.matWorld_ = matrix(worldTransform_);
+
+	//移動限界座標
+	const float kMoveLimitX = 33;
+	const float kMoveLimitY = 18;
+
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	//行列の更新
 	worldTransform_.TransferMatrix();
