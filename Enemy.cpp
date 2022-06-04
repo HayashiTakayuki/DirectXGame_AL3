@@ -21,7 +21,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	//input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	worldTransform_.translation_ = {0.0f,2.0f,0.0f};
+	worldTransform_.translation_ = {0.0f,3.0f,15.0f};
 
 	//ワールド変換の初期化
 	worldTransform_.Initialize();
@@ -35,7 +35,21 @@ void Enemy::Update()
 	//敵の移動の速さ
 	const float kEnemySpeed = 0.1f;
 
-	move.z = -kEnemySpeed;
+	switch (phase_)
+	{
+		//接近フェーズ
+	case Phase::Approach:
+	default:
+		//移動関数
+		Aproach(move, kEnemySpeed);
+		break;
+		//離脱フェーズ
+	case Phase::Leave:
+		//移動関数
+		Leave(move, kEnemySpeed);
+
+		break;
+	}
 
 	//注視点移動（ベクトルの加算）
 	worldTransform_.translation_ += move;
@@ -67,4 +81,31 @@ void Enemy::Draw(ViewProjection viewProjection_)
 {
 	//自キャラの描画
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+}
+
+void Enemy::Aproach(Vector3 move, const float kEnemySpeed)
+{
+	debugText_->SetPos(70, 190);
+	debugText_->Printf("Phase: Approach");
+	//移動（ベクトル加算）
+	move.z = -kEnemySpeed;
+	worldTransform_.translation_ += move;
+	//既定の位置についたら離脱
+	if (worldTransform_.translation_.z < 0.0f)
+	{
+		phase_ = Phase::Leave;
+	}
+}
+
+void Enemy::Leave(Vector3 move, const float kEnemySpeed)
+{
+	debugText_->SetPos(70, 190);
+	debugText_->Printf("Phase: Leave");
+
+	//移動（ベクトル加算）
+	move.x = -kEnemySpeed;
+	move.y = kEnemySpeed;
+	move.z = -kEnemySpeed;
+	worldTransform_.translation_ += move;
+
 }
