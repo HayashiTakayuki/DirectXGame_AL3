@@ -19,7 +19,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	textureHandle_ = TextureManager::Load("mario.jpg");
+	textureHandle_ = TextureManager::Load("player.jpg");
 	model_ = Model::Create();
 
 	viewProjection_.Initialize();

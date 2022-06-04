@@ -125,3 +125,14 @@ Matrix4 Matrix::matrix(WorldTransform worldTransform_)
 
 	return worldTransform_.matWorld_;
 }
+
+Vector3 Matrix::VecToMat(Vector3 vec, Matrix4 mat)
+{
+	Vector3 world;
+
+	world.x = vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + 0 * mat.m[3][0];
+	world.y = vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + 0 * mat.m[3][1];
+	world.z = vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + 0 * mat.m[3][2];
+
+	return world;
+}

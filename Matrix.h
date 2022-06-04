@@ -29,4 +29,7 @@ public:
 	//行列の設定
 	Matrix4 matrix(WorldTransform worldTransform_);
 
+	//ベクトルと行列の掛け算
+	Vector3 VecToMat(Vector3 vec, Matrix4 mat);
+
 };

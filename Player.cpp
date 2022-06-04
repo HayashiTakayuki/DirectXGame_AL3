@@ -27,9 +27,16 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 
 void Player::Update()
 {
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet)
+		{
+			return bullet->IsDead();
+		});
+
+
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,0,0 };
-	
+
 	//キャラクターの移動の速さ
 	const float kCharacterSpeed = 0.2f;
 
@@ -91,7 +98,7 @@ void Player::Update()
 	//キャラクターの攻撃処理
 	Attack();
 	//弾の更新処理
-	for(std::unique_ptr<PlayerBullet>& bullet : bullets_) 
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Upadate();
 	}
@@ -103,7 +110,7 @@ void Player::Draw(ViewProjection viewProjection_)
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 
 	//弾の描画
-	for (std::unique_ptr<PlayerBullet>&bullet : bullets_)
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
 		bullet->Draw(viewProjection_);
 	}
@@ -113,12 +120,17 @@ void Player::Attack()
 {
 	if (input_->TriggerKey(DIK_SPACE))
 	{
-		//自キャラの座標をコピー
-		Vector3 position = worldTransform_.translation_;
+		//弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
 
+		//速度ベクトルを自機の向きに合わせて回転させる
+		velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
+
+
+		//弾を生成し、初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		//弾を登録する
 		bullets_.push_back(std::move(newBullet));
