@@ -9,7 +9,8 @@
 #include "ViewProjection.h"
 #include"DebugCamera.h"
 #include "Player.h"
-
+#include<memory>
+#include"Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -52,8 +53,8 @@ class GameScene {
 	/// ゲームシーン用
 	/// </summary>
 
-	uint32_t textureHandle_ = 0;
-	Model* model_ = nullptr;
+	uint32_t playerTextureHandle_ = 0;
+	Model* playerModel_ = nullptr;
 	ViewProjection viewProjection_;
 	DebugCamera* debugCamera_ = nullptr;
 	float PAI = 3.14159265358979323f;
@@ -64,6 +65,8 @@ class GameScene {
 	//自キャラ
 	Player* player_ = nullptr;
 
-
-
+	//敵キャラ
+	uint32_t enemyTextureHandle_ = 0;
+	Model* enemyModel_ = nullptr;
+	Enemy* enemy_ = nullptr;
 };

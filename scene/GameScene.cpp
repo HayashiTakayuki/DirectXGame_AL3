@@ -10,6 +10,7 @@ GameScene::~GameScene()
 {
 	delete player_;
 	delete debugCamera_;
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -19,8 +20,13 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	textureHandle_ = TextureManager::Load("player.jpg");
-	model_ = Model::Create();
+	//プレイヤーの設定
+	playerTextureHandle_ = TextureManager::Load("player.jpg");
+	playerModel_ = Model::Create();
+
+	//敵の設定
+	enemyTextureHandle_ = TextureManager::Load("enemy.png");
+	enemyModel_ = Model::Create();
 
 	viewProjection_.Initialize();
 	debugCamera_ = new DebugCamera(1600,900);
@@ -31,8 +37,11 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
+	player_->Initialize(playerModel_,playerTextureHandle_);
 
+	enemy_= new Enemy();
+	//自キャラの初期化
+	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 
 	//	ビュープロジェクションの初期化
 	viewProjection_.Initialize();
@@ -44,6 +53,9 @@ void GameScene::Update()
 	
 	//自キャラの更新
 	player_->Update();
+
+	//敵キャラの更新
+	enemy_->Update();
 
 }
 
@@ -86,7 +98,8 @@ void GameScene::Draw() {
 	/// </summary>
 	//自キャラの描画
 	player_->Draw(viewProjection_);
-
+	//敵の描画
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

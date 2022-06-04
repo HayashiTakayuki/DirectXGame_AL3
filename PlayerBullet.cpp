@@ -21,7 +21,6 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 	//因数で受け取った初期化座標をセット
 	worldTransform_.translation_ = position;
-
 }
 
 void PlayerBullet::Upadate()

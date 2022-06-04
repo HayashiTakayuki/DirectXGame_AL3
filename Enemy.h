@@ -5,21 +5,18 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "Matrix.h"
-#include"PlayerBullet.h"
-#include<memory>
-#include<list>
+
 
 /// <summary>
-/// 自キャラ
+/// 敵
 /// </summary>
-class Player 
+class Enemy
 {
 public:
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player();
+	~Enemy();
 
 	/// <summary>
 	/// 初期化
@@ -36,11 +33,6 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
-	/// <summary>
-	/// 攻撃
-	/// </summary>
-	void Attack();
-
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -48,13 +40,11 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	
-	Input* input_ = nullptr;	
+
+	//Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	
+
 	//プレイヤーの行列計算
 	Matrix* matrix_ = nullptr;
 
-	//弾
-	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 };

@@ -33,7 +33,6 @@ void Player::Update()
 			return bullet->IsDead();
 		});
 
-
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,0,0 };
 
@@ -85,9 +84,6 @@ void Player::Update()
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	//行列の更新
-	worldTransform_.TransferMatrix();
-
 	//デバッグ用表示
 	debugText_->SetPos(50, 150);
 	debugText_->Printf(
@@ -102,6 +98,9 @@ void Player::Update()
 	{
 		bullet->Upadate();
 	}
+
+	//行列の更新
+	worldTransform_.TransferMatrix();
 }
 
 void Player::Draw(ViewProjection viewProjection_)
@@ -126,7 +125,6 @@ void Player::Attack()
 
 		//速度ベクトルを自機の向きに合わせて回転させる
 		velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
-
 
 		//弾を生成し、初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
