@@ -18,10 +18,10 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 	textureHandle_ = textureHandle;
 
 	//シングルトンインスタンスを取得する
-	//input_ = Input::GetInstance();
+	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	worldTransform_.translation_ = {0.0f,3.0f,15.0f};
+	worldTransform_.translation_ = {12.0f,3.0f,15.0f};
 
 	//ワールド変換の初期化
 	worldTransform_.Initialize();
@@ -29,6 +29,13 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 void Enemy::Update()
 {
+	AproachInitialize();
+
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet)
+		{
+			return bullet->IsDead();
+		});
 	//敵の移動ベクトル
 	Vector3 move = { 0,0,0 };
 
@@ -57,14 +64,13 @@ void Enemy::Update()
 	//ワールド行列の計算
 	worldTransform_.matWorld_ = matrix_->matrix(worldTransform_);
 
-	//移動限界座標
-	const float kMoveLimitX = 33;
-	const float kMoveLimitY = 18;
-
-	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
-	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
-	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
-	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+	//キャラクターの攻撃処理
+	//Fire();
+	//弾の更新処理
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+	{
+		bullet->Upadate();
+	}
 
 		//デバッグ用表示
 	debugText_->SetPos(70, 170);
@@ -81,6 +87,15 @@ void Enemy::Draw(ViewProjection viewProjection_)
 {
 	//自キャラの描画
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+
+	debugText_->SetPos(70, 220);
+	debugText_->Printf("bulletTimer%d",bulletTimer_);
+
+	//弾の描画
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
+	{
+		bullet->Draw(viewProjection_);
+	}
 }
 
 void Enemy::Aproach(Vector3 move, const float kEnemySpeed)
@@ -108,4 +123,35 @@ void Enemy::Leave(Vector3 move, const float kEnemySpeed)
 	move.z = -kEnemySpeed;
 	worldTransform_.translation_ += move;
 
+}
+
+void Enemy::Fire()
+{
+	//弾の速度
+	const float kBulletSpeed = -1.0f;
+	Vector3 velocity(0, 0, kBulletSpeed);
+
+	//速度ベクトルを自機の向きに合わせて回転させる
+	velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
+
+	//弾を生成し、初期化
+	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+
+	//弾を登録する
+	bullets_.push_back(std::move(newBullet));
+}
+
+void Enemy::AproachInitialize()
+{
+	//発射タイマーカウントダウン
+	bulletTimer_--;
+	//指定時間に達したら
+	if (bulletTimer_ <= 0)
+	{
+		//弾発射
+		Fire();
+		//発射タイマーを初期化
+		bulletTimer_ = kFireInterval;
+	}
 }

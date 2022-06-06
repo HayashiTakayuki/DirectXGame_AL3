@@ -11,7 +11,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	assert(model);
 	model_ = model;
 	// テクスチャ読み込み
-	textureHandle_ = TextureManager::Load("bullet.png");
+	textureHandle_ = TextureManager::Load("mario.jpg");
 
 	//引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;

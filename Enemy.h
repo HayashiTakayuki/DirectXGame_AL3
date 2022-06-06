@@ -5,7 +5,9 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "Matrix.h"
-
+#include"EnemyBullet.h"
+#include<memory>
+#include<list>
 
 /// <summary>
 /// 敵
@@ -46,6 +48,17 @@ public:
 	//離脱
 	void Leave(Vector3 move, const float kEnemySpeed);
 
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Fire();
+
+	//弾の間隔
+	static const int32_t kFireInterval = 60;
+
+	//接近フェーズの初期化
+	void AproachInitialize();
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -60,7 +73,16 @@ private:
 	//プレイヤーの行列計算
 	Matrix* matrix_ = nullptr;
 
+	Input* input_ = nullptr;
+
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
+	//弾
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+
+	//間隔タイマー
+	int32_t bulletTimer_ = kFireInterval;
+
+	int a = 100;
 };
