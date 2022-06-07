@@ -16,6 +16,16 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	//引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
 
+	//弾の形状
+	worldTransform_.scale_ = { 0.5f,0.5f,3.0f };
+
+	//Y軸周り角度(θy)
+	//worldTransform_.rotation_.y = std::atan2(,);
+	//横軸方向の長さ
+
+	//X軸周り角度(θx)
+	//worldTransform_.rotation_.y = std::atan2(,);
+
 	//ワールド変換の初期化
 	worldTransform_.Initialize();
 
