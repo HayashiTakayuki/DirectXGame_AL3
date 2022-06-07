@@ -117,21 +117,29 @@ void Player::Draw(ViewProjection viewProjection_)
 
 void Player::Attack()
 {
-	if (input_->TriggerKey(DIK_SPACE))
+	//発射タイマーカウントダウン
+	bulletTimer_--;
+	//指定時間に達したら
+	if (bulletTimer_ <= 0)
 	{
-		//弾の速度
-		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeed);
+		if (input_->PushKey(DIK_SPACE))
+		{
+			//弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
 
-		//速度ベクトルを自機の向きに合わせて回転させる
-		velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
+			//速度ベクトルを自機の向きに合わせて回転させる
+			velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
 
-		//弾を生成し、初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+			//弾を生成し、初期化
+			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
-		//弾を登録する
-		bullets_.push_back(std::move(newBullet));
+			//弾を登録する
+			bullets_.push_back(std::move(newBullet));
+		}
+		//発射タイマーを初期化
+		bulletTimer_ = kFireInterval;
 	}
 }
 

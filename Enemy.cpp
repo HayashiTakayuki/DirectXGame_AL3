@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Player.h"
 
 Enemy::~Enemy()
 {
@@ -12,7 +13,6 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 	//自キャラの生成
 	matrix_ = new Matrix();
-	SetPlayer(player_);
 
 	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
@@ -118,10 +118,10 @@ void Enemy::Leave(Vector3 move, const float kEnemySpeed)
 	debugText_->Printf("Phase: Leave");
 
 	//移動（ベクトル加算）
-	move.x = -kEnemySpeed;
-	move.y = kEnemySpeed;
-	move.z = -kEnemySpeed;
-	worldTransform_.translation_ += move;
+	//move.x = -kEnemySpeed;
+	//move.y = kEnemySpeed;
+	//move.z = -kEnemySpeed;
+	//worldTransform_.translation_ += move;
 
 }
 
@@ -132,8 +132,16 @@ void Enemy::Fire()
 	const float kBulletSpeed = -1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
 
+	Vector3 enemyToPlayer;
+	//敵キャラ->自キャラの差分ベクトルを求める
+	enemyToPlayer = player_->GetWorldPosition() - GetWorldPosition();
+	//正規化
+	enemyToPlayer.normalize();
+	float bulletSpeed = 0.4;
+
 	//速度ベクトルを自機の向きに合わせて回転させる
-	velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
+	velocity = enemyToPlayer.normalize() * bulletSpeed;
+	//velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();

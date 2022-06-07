@@ -56,14 +56,8 @@ public:
 	/// </summary>
 	void Fire();
 
-	//弾の間隔
-	static const int32_t kFireInterval = 60;
-
 	//接近フェーズの初期化
 	void AproachInitialize();
-
-	//自キャラ
-	Player* player_ = nullptr;
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -75,7 +69,6 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
-	//Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
 	//プレイヤーの行列計算
@@ -89,8 +82,14 @@ private:
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 
+	//弾の間隔
+	static const int32_t kFireInterval = 60;
+
 	//間隔タイマー
 	int32_t bulletTimer_ = kFireInterval;
+
+	//自キャラ
+	Player* player_ = nullptr;
 
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();

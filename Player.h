@@ -59,4 +59,12 @@ private:
 
 	//’e
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+	
+	//’e‚ÌŠÔŠu
+	static const int32_t kFireInterval = 20;
+
+	//ŠÔŠuƒ^ƒCƒ}[
+	int32_t bulletTimer_ = kFireInterval;
+
+
 };

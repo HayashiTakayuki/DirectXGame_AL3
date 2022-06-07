@@ -28,9 +28,6 @@ void GameScene::Initialize() {
 	enemyTextureHandle_ = TextureManager::Load("enemy.png");
 	enemyModel_ = Model::Create();
 
-	//敵キャラに自キャラのアドレスを渡す
-	enemy_->SetPlayer(player_);
-
 	viewProjection_.Initialize();
 	debugCamera_ = new DebugCamera(1600,900);
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -43,6 +40,8 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModel_,playerTextureHandle_);
 
 	enemy_= new Enemy();
+	//敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
 	//自キャラの初期化
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 
