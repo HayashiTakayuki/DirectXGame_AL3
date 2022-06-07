@@ -15,7 +15,6 @@
 class Player 
 {
 public:
-
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -40,6 +39,9 @@ public:
 	/// 攻撃
 	/// </summary>
 	void Attack();
+
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
 
 private:
 	//ワールド変換データ

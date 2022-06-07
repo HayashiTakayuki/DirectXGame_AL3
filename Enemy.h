@@ -9,6 +9,9 @@
 #include<memory>
 #include<list>
 
+//自機クラスの前方宣言
+class Player;
+
 /// <summary>
 /// 敵
 /// </summary>
@@ -59,6 +62,11 @@ public:
 	//接近フェーズの初期化
 	void AproachInitialize();
 
+	//自キャラ
+	Player* player_ = nullptr;
+
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -84,5 +92,7 @@ private:
 	//間隔タイマー
 	int32_t bulletTimer_ = kFireInterval;
 
-	int a = 100;
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+
 };

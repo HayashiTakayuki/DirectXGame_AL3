@@ -12,6 +12,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 	//自キャラの生成
 	matrix_ = new Matrix();
+	SetPlayer(player_);
 
 	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
@@ -29,6 +30,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 void Enemy::Update()
 {
+	//キャラクターの攻撃処理
 	AproachInitialize();
 
 	//デスフラグの立った弾を削除
@@ -64,8 +66,6 @@ void Enemy::Update()
 	//ワールド行列の計算
 	worldTransform_.matWorld_ = matrix_->matrix(worldTransform_);
 
-	//キャラクターの攻撃処理
-	//Fire();
 	//弾の更新処理
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
@@ -127,6 +127,7 @@ void Enemy::Leave(Vector3 move, const float kEnemySpeed)
 
 void Enemy::Fire()
 {
+	assert(player_);
 	//弾の速度
 	const float kBulletSpeed = -1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
@@ -154,4 +155,16 @@ void Enemy::AproachInitialize()
 		//発射タイマーを初期化
 		bulletTimer_ = kFireInterval;
 	}
+}
+
+Vector3 Enemy::GetWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
 }
