@@ -52,6 +52,13 @@ void Player::Update()
 	if (input_->PushKey(DIK_DOWN)) {
 		move.y = -kCharacterSpeed;
 	}
+	if (input_->PushKey(DIK_Z)) {
+		move.z = kCharacterSpeed;
+	}
+	if (input_->PushKey(DIK_X)) {
+		move.z = -kCharacterSpeed;
+	}
+
 
 	//‰ñ“]ˆ—
 	{

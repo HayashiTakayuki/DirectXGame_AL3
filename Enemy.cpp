@@ -137,11 +137,10 @@ void Enemy::Fire()
 	enemyToPlayer = player_->GetWorldPosition() - GetWorldPosition();
 	//正規化
 	enemyToPlayer.normalize();
-	float bulletSpeed = 0.4;
+	float bulletSpeed = 0.4f;
 
 	//速度ベクトルを自機の向きに合わせて回転させる
 	velocity = enemyToPlayer.normalize() * bulletSpeed;
-	//velocity = matrix_->VecToMat(velocity, worldTransform_.matWorld_);
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
