@@ -47,9 +47,9 @@ public:
 
 	//敵の行動関数
 	//接近
-	void Aproach(Vector3 move, const float kEnemySpeed);
+	void Aproach();
 	//離脱
-	void Leave(Vector3 move, const float kEnemySpeed);
+	void Leave();
 
 	/// <summary>
 	/// 攻撃
@@ -61,6 +61,11 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	//敵キャラから自キャラまでのベクトル
+	Vector3 enemyToPlayer;
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -76,6 +81,9 @@ private:
 
 	Input* input_ = nullptr;
 
+	//メンバ関数ポインタ
+	static void (Enemy::* phase[])();
+
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
@@ -90,8 +98,7 @@ private:
 
 	//自キャラ
 	Player* player_ = nullptr;
-
-	//ワールド座標を取得
-	Vector3 GetWorldPosition();
-
+	
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
 };

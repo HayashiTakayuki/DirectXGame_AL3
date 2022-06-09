@@ -5,7 +5,7 @@ EnemyBullet::~EnemyBullet()
 	delete matrix_;
 }
 
-void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
+void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity, const Vector3& rotation)
 {
 	//NuLLポインタチェック
 	assert(model);
@@ -20,11 +20,12 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	worldTransform_.scale_ = { 0.5f,0.5f,3.0f };
 
 	//Y軸周り角度(θy)
-	//worldTransform_.rotation_.y = std::atan2(,);
+	worldTransform_.rotation_.y = std::atan2(rotation.x,rotation.z);
 	//横軸方向の長さ
+	Vector3 a = {rotation.x,0,rotation.z};
 
 	//X軸周り角度(θx)
-	//worldTransform_.rotation_.y = std::atan2(,);
+	worldTransform_.rotation_.x = std::atan2(-rotation.y, a.length());
 
 	//ワールド変換の初期化
 	worldTransform_.Initialize();

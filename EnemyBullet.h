@@ -22,7 +22,7 @@ public:
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="position">初期座標</param>
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity,const Vector3& rotation);
 
 	/// <summary>
 	/// 更新
@@ -59,4 +59,5 @@ private:
 	int32_t deathTimer_ = kLileTime;
 	//デスフラグ
 	bool isDead_ = false;
+
 };

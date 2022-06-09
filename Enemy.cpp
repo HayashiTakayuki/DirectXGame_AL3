@@ -44,21 +44,7 @@ void Enemy::Update()
 	//敵の移動の速さ
 	const float kEnemySpeed = 0.1f;
 
-	switch (phase_)
-	{
-		//接近フェーズ
-	case Phase::Approach:
-	default:
-		//移動関数
-		Aproach(move, kEnemySpeed);
-		break;
-		//離脱フェーズ
-	case Phase::Leave:
-		//移動関数
-		Leave(move, kEnemySpeed);
-
-		break;
-	}
+	(this->*phase[static_cast<size_t>(phase_)])();
 
 	//注視点移動（ベクトルの加算）
 	worldTransform_.translation_ += move;
@@ -98,31 +84,41 @@ void Enemy::Draw(ViewProjection viewProjection_)
 	}
 }
 
-void Enemy::Aproach(Vector3 move, const float kEnemySpeed)
+void Enemy::Aproach()
 {
+	//敵の移動ベクトル
+	Vector3 move = { 0,0,0 };
+	//敵の移動の速さ
+	const float kEnemySpeed = 0.1f;
+
 	debugText_->SetPos(70, 190);
 	debugText_->Printf("Phase: Approach");
+
 	//移動（ベクトル加算）
 	move.z = -kEnemySpeed;
 	worldTransform_.translation_ += move;
-	//既定の位置についたら離脱
-	if (worldTransform_.translation_.z < 0.0f)
-	{
-		phase_ = Phase::Leave;
-	}
+	////既定の位置についたら離脱
+	//if (worldTransform_.translation_.z < 0.0f)
+	//{
+	//	phase_ = Phase::Leave;
+	//}
 }
 
-void Enemy::Leave(Vector3 move, const float kEnemySpeed)
+void Enemy::Leave()
 {
-	debugText_->SetPos(70, 190);
-	debugText_->Printf("Phase: Leave");
+	////敵の移動ベクトル
+	//Vector3 move = { 0,0,0 };
+	////敵の移動の速さ
+	//const float kEnemySpeed = 0.1f;
 
-	//移動（ベクトル加算）
+	//debugText_->SetPos(70, 190);
+	//debugText_->Printf("Phase: Leave");
+
+	////移動（ベクトル加算）
 	//move.x = -kEnemySpeed;
 	//move.y = kEnemySpeed;
 	//move.z = -kEnemySpeed;
 	//worldTransform_.translation_ += move;
-
 }
 
 void Enemy::Fire()
@@ -132,7 +128,6 @@ void Enemy::Fire()
 	const float kBulletSpeed = -1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
 
-	Vector3 enemyToPlayer;
 	//敵キャラ->自キャラの差分ベクトルを求める
 	enemyToPlayer = player_->GetWorldPosition() - GetWorldPosition();
 	//正規化
@@ -144,11 +139,17 @@ void Enemy::Fire()
 
 	//弾を生成し、初期化
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity, enemyToPlayer);
 
 	//弾を登録する
 	bullets_.push_back(std::move(newBullet));
 }
+
+void (Enemy::* Enemy::phase[])() =
+{
+	&Enemy::Aproach,//要素番号0 接近
+	&Enemy::Leave//要素番号1 離脱　
+};
 
 void Enemy::AproachInitialize()
 {
