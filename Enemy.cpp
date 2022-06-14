@@ -1,9 +1,16 @@
 #include "Enemy.h"
 #include "Player.h"
 
+Enemy::Enemy()
+{
+	//アプローチクラスのnew
+	state_ = new EnemyStateApproach();
+}
+
 Enemy::~Enemy()
 {
 	delete matrix_;
+	delete state_;
 }
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle)
@@ -30,6 +37,9 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 
 void Enemy::Update()
 {
+	//敵の行動パターンのアップデート
+	state_->Update(this);
+
 	//キャラクターの攻撃処理
 	AproachInitialize();
 
@@ -43,8 +53,6 @@ void Enemy::Update()
 
 	//敵の移動の速さ
 	const float kEnemySpeed = 0.1f;
-
-	(this->*phase[static_cast<size_t>(phase_)])();
 
 	//注視点移動（ベクトルの加算）
 	worldTransform_.translation_ += move;
@@ -84,41 +92,17 @@ void Enemy::Draw(ViewProjection viewProjection_)
 	}
 }
 
-void Enemy::Aproach()
+//敵の行動パターンを変える
+void Enemy::ChageState(BaseEnemyState* newState)
 {
-	//敵の移動ベクトル
-	Vector3 move = { 0,0,0 };
-	//敵の移動の速さ
-	const float kEnemySpeed = 0.1f;
-
-	debugText_->SetPos(70, 190);
-	debugText_->Printf("Phase: Approach");
-
-	//移動（ベクトル加算）
-	move.z = -kEnemySpeed;
-	worldTransform_.translation_ += move;
-	////既定の位置についたら離脱
-	//if (worldTransform_.translation_.z < 0.0f)
-	//{
-	//	phase_ = Phase::Leave;
-	//}
+	delete state_;
+	state_ = newState;
 }
 
-void Enemy::Leave()
+//引数で指定した移動量だけ座標を変更する関数
+void Enemy::EnemyMove(Vector3 move)
 {
-	////敵の移動ベクトル
-	//Vector3 move = { 0,0,0 };
-	////敵の移動の速さ
-	//const float kEnemySpeed = 0.1f;
-
-	//debugText_->SetPos(70, 190);
-	//debugText_->Printf("Phase: Leave");
-
-	////移動（ベクトル加算）
-	//move.x = -kEnemySpeed;
-	//move.y = kEnemySpeed;
-	//move.z = -kEnemySpeed;
-	//worldTransform_.translation_ += move;
+	worldTransform_.translation_ += move;
 }
 
 void Enemy::Fire()
@@ -144,12 +128,6 @@ void Enemy::Fire()
 	//弾を登録する
 	bullets_.push_back(std::move(newBullet));
 }
-
-void (Enemy::* Enemy::phase[])() =
-{
-	&Enemy::Aproach,//要素番号0 接近
-	&Enemy::Leave//要素番号1 離脱　
-};
 
 void Enemy::AproachInitialize()
 {

@@ -8,6 +8,9 @@
 #include"EnemyBullet.h"
 #include<memory>
 #include<list>
+#include"BaseEnemyState.h"
+#include"EnemyStateApproach.h"
+#include"EnemyStateLeave.h"
 
 //自機クラスの前方宣言
 class Player;
@@ -18,6 +21,11 @@ class Player;
 class Enemy
 {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Enemy();
+
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -38,18 +46,17 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
-	//行動フェーズ
-	enum class Phase 
-	{
-		Approach,//接近する
-		Leave,//離脱する
-	};
+	//行動パターンを変える関数
+	void ChageState(BaseEnemyState* newState);
 
-	//敵の行動関数
-	//接近
-	void Aproach();
-	//離脱
-	void Leave();
+	//座標を得るゲッター
+	WorldTransform worldTransform() const { return worldTransform_; }
+
+	//引数で指定した移動量だけ座標を変更する関数
+	void EnemyMove(Vector3 move);
+
+	//敵の行動パターン
+	BaseEnemyState* state_;
 
 	/// <summary>
 	/// 攻撃
@@ -80,12 +87,6 @@ private:
 	Matrix* matrix_ = nullptr;
 
 	Input* input_ = nullptr;
-
-	//メンバ関数ポインタ
-	static void (Enemy::* phase[])();
-
-	//フェーズ
-	Phase phase_ = Phase::Approach;
 
 	//弾
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
