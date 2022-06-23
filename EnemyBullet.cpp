@@ -6,7 +6,7 @@ EnemyBullet::~EnemyBullet()
 	delete matrix_;
 }
 
-void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity, const Vector3& rotation)
+void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
 	//NuLLポインタチェック
 	assert(model);

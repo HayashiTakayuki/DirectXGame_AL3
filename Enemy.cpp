@@ -11,7 +11,6 @@ Enemy::~Enemy()
 {
 	delete matrix_;
 	delete state_;
-	delete enemyBullet_;
 }
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle)
@@ -124,7 +123,7 @@ void Enemy::Fire()
 
 	//’e‚ğ¶¬‚µA‰Šú‰»
 	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(model_, worldTransform_.translation_, velocity, enemyToPlayer);
+	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 	newBullet->SetPlayer(player_);
 
 	//’e‚ğ“o˜^‚·‚é

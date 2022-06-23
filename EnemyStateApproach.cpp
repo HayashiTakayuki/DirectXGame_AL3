@@ -13,9 +13,9 @@ void EnemyStateApproach::Update(Enemy* pEnemy)
 
 	pEnemy->EnemyMove(move);
 
-	////Šù’è‚ÌˆÊ’u‚É‚Â‚¢‚½‚ç—£’E
-	//if (pEnemy->worldTransform().translation_.z < 0.0f)
-	//{
-	//	pEnemy->ChageState(new EnemyStateLeave);
-	//}
+	//Šù’è‚ÌˆÊ’u‚É‚Â‚¢‚½‚ç—£’E
+	if (pEnemy->worldTransform().translation_.z < 0.0f)
+	{
+		pEnemy->ChageState(new EnemyStateLeave);
+	}
 }
