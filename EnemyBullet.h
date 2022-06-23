@@ -6,6 +6,9 @@
 #include "DebugText.h"
 #include "Matrix.h"
 
+//自機クラスの前方宣言
+class Player;
+
 /// <summary>
 /// 敵の弾
 /// </summary>
@@ -37,6 +40,16 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	void SetPlayer(Player* player) { player_ = player; }
+
+	//線形補完
+	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+	//線形補完
+	Vector3 Slerp(Vector3& v1,Vector3& v2, float t);
+
+	//ワールド座標を取得
+	Vector3 GetWorldEnemyBulletPosition();
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -60,4 +73,13 @@ private:
 	//デスフラグ
 	bool isDead_ = false;
 
+	//自キャラ
+	Player* player_ = nullptr;
+
+	//敵キャラから自キャラまでのベクトル
+	Vector3 enemyBulletToPlayer;
+
+	float bulletSpeed = 0.3f;
+
+	float time = 0.0f;
 };

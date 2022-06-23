@@ -9,13 +9,13 @@ void EnemyStateApproach::Update(Enemy* pEnemy)
 	const float kEnemySpeed = 0.1f;
 
 	//移動（ベクトル加算）
-	move.z = -kEnemySpeed;
+	//move.z = -kEnemySpeed;
 
 	pEnemy->EnemyMove(move);
 
-	//既定の位置についたら離脱
-	if (pEnemy->worldTransform().translation_.z < 0.0f)
-	{
-		pEnemy->ChageState(new EnemyStateLeave);
-	}
+	////既定の位置についたら離脱
+	//if (pEnemy->worldTransform().translation_.z < 0.0f)
+	//{
+	//	pEnemy->ChageState(new EnemyStateLeave);
+	//}
 }

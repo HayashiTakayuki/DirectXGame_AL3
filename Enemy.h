@@ -102,4 +102,7 @@ private:
 	
 	//“GƒLƒƒƒ‰
 	Enemy* enemy_ = nullptr;
+
+	EnemyBullet* enemyBullet_ = nullptr;
+
 };

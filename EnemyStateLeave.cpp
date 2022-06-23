@@ -9,9 +9,9 @@ void EnemyStateLeave::Update(Enemy* pEnemy)
 	const float kEnemySpeed = 0.1f;
 
 	//移動（ベクトル加算）
-	move.x = -kEnemySpeed;
-	move.y = kEnemySpeed;
-	move.z = -kEnemySpeed;
+	//move.x = -kEnemySpeed;
+	//move.y = kEnemySpeed;
+	//move.z = -kEnemySpeed;
 
 	pEnemy->EnemyMove(move);
 
