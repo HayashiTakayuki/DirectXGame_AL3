@@ -73,6 +73,13 @@ public:
 
 	//敵キャラから自キャラまでのベクトル
 	Vector3 enemyToPlayer;
+
+	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//弾のリストを取得
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;

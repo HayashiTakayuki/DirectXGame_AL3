@@ -13,12 +13,13 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	model_ = model;
 	// テクスチャ読み込み
 	textureHandle_ = TextureManager::Load("mario.jpg");
+	debugText_ = DebugText::GetInstance();
 
 	//引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
 
 	//弾の形状
-	worldTransform_.scale_ = { 0.5f,0.5f,3.0f };
+	worldTransform_.scale_ = { 1,1,1 };
 
 	//ワールド変換の初期化
 	worldTransform_.Initialize();
@@ -99,6 +100,23 @@ Vector3 EnemyBullet::Slerp(Vector3& v1,Vector3& v2, float t)
 }
 
 Vector3 EnemyBullet::GetWorldEnemyBulletPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
+}
+
+void EnemyBullet::OnCollision()
+{
+	isDead_ = true;
+}
+
+Vector3 EnemyBullet::GetWorldPosition()
 {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;

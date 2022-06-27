@@ -59,11 +59,10 @@ void Player::Update()
 		move.z = -kCharacterSpeed;
 	}
 
-
 	//回転処理
 	{
 		//回転の速さ[ラジアン/flame]
-		const float kChectSpeed = 0.05f;
+		const float kChectSpeed = 0.02f;
 
 		//押した方向で移動ベクトルを変更
 		if (input_->PushKey(DIK_U))
@@ -97,6 +96,11 @@ void Player::Update()
 		"Root:(%f,%f,%f)", worldTransform_.translation_.x += move.x,
 		worldTransform_.translation_.y += move.y,
 		worldTransform_.translation_.z += move.z);
+
+		//デバッグ用表示
+	debugText_->SetPos(50, 200);
+	debugText_->Printf(
+		"Root:(%f,%f,%f)", worldTransform_.scale_.x,worldTransform_.scale_.y,worldTransform_.scale_.z);
 
 	//キャラクターの攻撃処理
 	Attack();
@@ -160,4 +164,9 @@ Vector3 Player::GetWorldPosition()
 	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
+}
+
+void Player::OnCollision()
+{
+
 }

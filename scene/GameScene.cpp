@@ -59,6 +59,7 @@ void GameScene::Update()
 	//敵キャラの更新
 	enemy_->Update();
 
+	CheckAllCollision();
 }
 
 void GameScene::Draw() {
@@ -117,9 +118,112 @@ void GameScene::Draw() {
 
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
-	//
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
+#pragma endregion
+}
+
+void GameScene::CheckAllCollision()
+{
+	//判定対象AとBの座標
+	Vector3 posA, posB;
+
+	//自弾リストの取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+	//敵弾リストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullets();
+
+#pragma region 自キャラと敵弾の当たり判定
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	//自キャラと敵弾すべての当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets)
+	{
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		//座標AとBの距離を求める
+		//弾と弾の交差判定
+		float x = posB.x - posA.x;
+		float y = posB.y - posA.y;
+		float z = posB.z - posA.z;
+
+		//プレイヤーと敵弾の半径の合計幅
+		float Radius = 3;
+
+		if (pow(x,2) + pow(y,2) + pow(z,2)<=(Radius))
+		{
+			//自キャラの衝突時コールバック関数を呼び出す
+			player_->OnCollision();
+
+			//敵弾の衝突時コールバック関数を呼び出す
+			bullet->OnCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region 自弾と敵キャラの当たり判定
+	//敵キャラの座標
+	posB = enemy_->GetWorldPosition();
+
+	//自キャラと敵弾すべての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets)
+	{
+		//自弾の座標
+		posA = bullet->GetWorldPosition();
+
+		//座標AとBの距離を求める
+		//弾と弾の交差判定
+		float x = posB.x - posA.x;
+		float y = posB.y - posA.y;
+		float z = posB.z - posA.z;
+
+		//プレイヤーと敵弾の半径の合計幅
+		float Radius = 4;
+
+		if (pow(x, 2) + pow(y, 2) + pow(z, 2) <= (Radius))
+		{
+			//敵キャラの衝突時コールバック関数を呼び出す
+			enemy_->OnCollision();
+
+			//自弾の衝突時コールバック関数を呼び出す
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+#pragma region 自弾と敵弾の当たり判定
+
+	//自キャラと敵弾すべての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& playerBullet : playerBullets)
+	{
+		for (const std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullets)
+		{
+			//自弾の座標
+			posA = playerBullet->GetWorldPosition();
+			posB = enemyBullet->GetWorldPosition();
+			//座標AとBの距離を求める
+			//弾と弾の交差判定
+			float x = posB.x - posA.x;
+			float y = posB.y - posA.y;
+			float z = posB.z - posA.z;
+
+			//プレイヤーと敵弾の半径の合計幅
+			float Radius = 3;
+
+			if (pow(x, 2) + pow(y, 2) + pow(z, 2) <= (Radius))
+			{
+				//自弾の衝突時コールバック関数を呼び出す
+				playerBullet->OnCollision();
+
+				//敵弾の衝突時コールバック関数を呼び出す
+				enemyBullet->OnCollision();
+			}
+		}
+	}
 #pragma endregion
 }
