@@ -45,7 +45,7 @@ public:
 	//線形補完
 	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
-	//線形補完
+	//線形補間
 	Vector3 Slerp(Vector3& v1,Vector3& v2, float t);
 
 	//ワールド座標を取得
