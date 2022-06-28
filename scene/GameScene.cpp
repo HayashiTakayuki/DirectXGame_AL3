@@ -11,6 +11,7 @@ GameScene::~GameScene()
 	delete player_;
 	delete debugCamera_;
 	delete enemy_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -45,6 +46,15 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	enemy_->Initialize(enemyModel_, enemyTextureHandle_);
 
+	//3Dモデルの生成
+	modelSkydomeTextureHandle_ = TextureManager::Load("genso.jpg");
+	modelSkydome_ = Model::CreateFromOBJ("tenkyu", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, modelSkydomeTextureHandle_);
+
+	//ワールド変換の初期化
+	worldTransform_.Initialize();
+
 	//	ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 }
@@ -60,6 +70,8 @@ void GameScene::Update()
 	enemy_->Update();
 
 	CheckAllCollision();
+
+	skydome_->Update();
 }
 
 void GameScene::Draw() {
@@ -103,6 +115,8 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	//敵の描画
 	enemy_->Draw(viewProjection_);
+
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

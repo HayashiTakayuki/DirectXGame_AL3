@@ -11,6 +11,7 @@
 #include "Player.h"
 #include<memory>
 #include"Enemy.h"
+#include"Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -58,6 +59,9 @@ class GameScene {
 	/// ゲームシーン用
 	/// </summary>
 
+	//ワールド変換データ
+	WorldTransform worldTransform_;
+
 	uint32_t playerTextureHandle_ = 0;
 	Model* playerModel_ = nullptr;
 	ViewProjection viewProjection_;
@@ -74,4 +78,9 @@ class GameScene {
 	uint32_t enemyTextureHandle_ = 0;
 	Model* enemyModel_ = nullptr;
 	Enemy* enemy_ = nullptr;
+
+	//3Dモデル
+	Skydome* skydome_ = nullptr;
+	Model* modelSkydome_ = nullptr;
+	uint32_t modelSkydomeTextureHandle_ = 0;
 };
